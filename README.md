@@ -1,2 +1,2 @@
-# Resume
-Testing 1, 2, 3
+# EGN 3000L
+This folder contains fabrication videos and programming code for our project, Lightning McQueen 

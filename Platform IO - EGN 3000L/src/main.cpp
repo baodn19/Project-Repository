@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h> // Needed for the playing audio
 #include "RedMP3.h" // store all the function of the audio controller
+#include "motor.h"
 
 // Headlights and Photoresistor
 #define RIGHT_LED 2 // Pin for right headlight

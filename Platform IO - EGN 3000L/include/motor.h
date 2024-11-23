@@ -1,0 +1,57 @@
+#ifndef MOTOR.H
+#define MOTOR.H
+#include <Arduino.h>
+
+// Function for controling the motors' speed and direction
+// Input: the array for motor specification (R1, R2, RE, L1, L2, LE), right speed, left speed, right IR, left IR
+void rotateMotor(int motorPin[6], int rightMotorSpeed, int leftMotorSpeed, int rightIR, int leftIR) 
+{ 
+  // Read from both IR sensors
+  int rightIRSensorValue = digitalRead(rightIR);
+  int leftIRSensorValue = digitalRead(leftIR);
+
+  // Checking the value of each IR sensors
+  Serial.println("Right: " + String(rightIRSensorValue));
+  Serial.println("Left: " + String(leftIRSensorValue));
+  Serial.println();
+  delay(500);
+
+  //If none of the sensors detects black line, then go straight
+  if (rightIRSensorValue == LOW && leftIRSensorValue == LOW)
+  {
+    digitalWrite(motorPin[0],HIGH);
+    digitalWrite(motorPin[1],LOW); 
+    digitalWrite(motorPin[3],HIGH);
+    digitalWrite(motorPin[4],LOW);     
+  }
+  //If right sensor detects black line, then turn right
+  else if (rightIRSensorValue == HIGH && leftIRSensorValue == LOW )
+  {
+    digitalWrite(motorPin[0],LOW);
+    digitalWrite(motorPin[1],HIGH);
+    digitalWrite(motorPin[3],HIGH);
+    digitalWrite(motorPin[4],LOW);  
+  }
+  //If left sensor detects black line, then turn left  
+  else if (rightIRSensorValue == LOW && leftIRSensorValue == HIGH )
+  { 
+    digitalWrite(motorPin[0],HIGH);
+    digitalWrite(motorPin[1],LOW); 
+    digitalWrite(motorPin[3],LOW);
+    digitalWrite(motorPin[4],HIGH); 
+  } 
+  //If both the sensors detect black line, then stop 
+  else 
+  {
+    digitalWrite(motorPin[0],LOW);
+    digitalWrite(motorPin[1],LOW);
+    digitalWrite(motorPin[3],LOW);
+    digitalWrite(motorPin[4],LOW);
+  }
+
+  // Input speed into each motor
+  analogWrite(motorPin[2], abs(rightMotorSpeed));
+  analogWrite(motorPin[5], abs(leftMotorSpeed));    
+}
+
+#endif

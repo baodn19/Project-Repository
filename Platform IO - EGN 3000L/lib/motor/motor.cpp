@@ -1,9 +1,5 @@
-#ifndef MOTOR.H
-#define MOTOR.H
-#include <Arduino.h>
+#include "motor.h"
 
-// Function for controling the motors' speed and direction
-// Input: the array for motor specification (R1, R2, RE, L1, L2, LE), right speed, left speed, right IR, left IR
 void rotateMotor(int motorPin[6], int rightMotorSpeed, int leftMotorSpeed, int rightIR, int leftIR) 
 { 
   // Read from both IR sensors
@@ -53,5 +49,3 @@ void rotateMotor(int motorPin[6], int rightMotorSpeed, int leftMotorSpeed, int r
   analogWrite(motorPin[2], abs(rightMotorSpeed));
   analogWrite(motorPin[5], abs(leftMotorSpeed));    
 }
-
-#endif

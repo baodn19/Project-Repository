@@ -8,7 +8,7 @@
 // IR Sensors
 #define IR_SENSOR_RIGHT 12 // Pin for right IR sensor
 #define IR_SENSOR_LEFT 13 // Pin for left IR sensor
-#define MOTOR_SPEED 180 // Motors' speed
+#define MOTOR_SPEED 130 // Motors' speed
 
 // Headlights and Photoresistor
 #define RIGHT_LED 2 // Pin for right headlight
@@ -42,7 +42,7 @@ void setup() {
   // Set input for ir sensors
   pinMode(IR_SENSOR_RIGHT, INPUT);
   pinMode(IR_SENSOR_LEFT, INPUT);
-  //rotateMotor(0,0); // make sure the wheels aren't moving
+  rotateMotor(motorConfig, 0, IR_SENSOR_RIGHT, IR_SENSOR_LEFT); // make sure the wheels aren't moving
 
   // Set output for headlights and input for the photoresistor
   pinMode(RIGHT_LED, OUTPUT);
@@ -59,6 +59,6 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  rotateMotor(motorConfig, MOTOR_SPEED, MOTOR_SPEED, IR_SENSOR_RIGHT, IR_SENSOR_LEFT);
+  rotateMotor(motorConfig, MOTOR_SPEED, IR_SENSOR_RIGHT, IR_SENSOR_LEFT);
   readLight(RIGHT_LED, LEFT_LED, PHOTORES);
 }

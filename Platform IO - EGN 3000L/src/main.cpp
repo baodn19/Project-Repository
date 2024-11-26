@@ -5,10 +5,15 @@
 #include <RedMP3.h> // store all the function of the audio controller
 
 // Variables
-// IR Sensors
+//Motor
+int motorConfig[6] = {6, 5, 3, 9, 10, 11};
 #define IR_SENSOR_RIGHT 12 // Pin for right IR sensor
 #define IR_SENSOR_LEFT 13 // Pin for left IR sensor
 #define MOTOR_SPEED 130 // Motors' speed
+
+Motor yellowMotor(motorConfig, IR_SENSOR_RIGHT, IR_SENSOR_LEFT);
+
+// IR Sensors
 
 // Headlights and Photoresistor
 #define RIGHT_LED 2 // Pin for right headlight
@@ -21,8 +26,7 @@ int8_t volume = 0x1a; // set the volume for the speaker
 #define MP3_TX 8//TX to D8, note that D8 can not be used as RX on Mega2560, you should modify this if you donot use Arduino UNO
 MP3 mp3(MP3_RX, MP3_TX);
 
-//Motor
-int motorConfig[6] = {6, 5, 3, 9, 10, 11};
+
 
 void setup() {
   //The problem with TT gear motors is that, at very low pwm value it does not even rotate.
@@ -34,15 +38,8 @@ void setup() {
   TCCR0B = TCCR0B & (B11111000 | B00000010);
 
   // put your setup code here, to run once:
-  // Set output for right motor's pin
-  for (int i = 0; i < 6; i++) {
-    pinMode(motorConfig[i], OUTPUT);
-  }
-
-  // Set input for ir sensors
-  pinMode(IR_SENSOR_RIGHT, INPUT);
-  pinMode(IR_SENSOR_LEFT, INPUT);
-  rotateMotor(motorConfig, 0, IR_SENSOR_RIGHT, IR_SENSOR_LEFT); // make sure the wheels aren't moving
+  yellowMotor.setMotor();
+  yellowMotor.rotateMotor();
 
   // Set output for headlights and input for the photoresistor
   pinMode(RIGHT_LED, OUTPUT);
@@ -59,6 +56,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  rotateMotor(motorConfig, MOTOR_SPEED, IR_SENSOR_RIGHT, IR_SENSOR_LEFT);
+  yellowMotor.rotateMotor(MOTOR_SPEED);
   readLight(RIGHT_LED, LEFT_LED, PHOTORES);
+  delay(500);
 }

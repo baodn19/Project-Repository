@@ -14,17 +14,49 @@ unsigned long currMillis = 0; // current timestamp
 int8_t folderName = 0x01; // Set location of sound foler
 int8_t fileName = 0x01; // Set file wanted to play
 
-void playMusic(unsigned int time, int8_t folderName, int8_t fileName) 
-{
+Audio::Audio(int RX_, int TX_, int8_t folderLoc_, int8_t (&fileLoc_)[2], int8_t volume_, int rightLED_, int leftLED_, uint8_t photores_) {
+  // Array attribute
+  for (int i = 0; i < 2; i++) {
+    fileLoc[i] = fileLoc_[i];
+  }
+   
+  // Other attributes
+  RX = RX_;
+  TX = TX_;
+  folderLoc = folderLoc_;
+  volume = volume_;
+  rightLED = rightLED_;
+  leftLED = leftLED_;
+  photores = photores_;
+}
+
+void Audio::setAudio() {
+  // Set output for headlights and input for the photoresistor
+  pinMode(rightLED, OUTPUT);
+  pinMode(leftLED, OUTPUT);
+  pinMode(photores, INPUT);
+
+  MP3 mp3(RX, TX);
+  // Initialize the MP3 module
+  delay(500);//Requires 500ms to wait for the MP3 module to initialize  
+  mp3.setVolume(volume);
+  delay(50);//you should wait for >=50ms between two commands
+}
+
+void Audio::changeLightThreshold(int lightThreshold_) {
+  lightThreshold = lightThreshold_;
+}
+
+void Audio::playMusic(unsigned int time, int audioFile) {
   // Create mp3 object
-  MP3 mp3(MP3_RX, MP3_TX);
+  MP3 mp3(RX, TX);
 
   // Marking the current timestamp
   currMillis = millis();
 
   // Check if the audio is finished playing
   if (musicDone == 1) {
-    mp3.playWithFileName(0x01,0x01); // Play the audio file  
+    mp3.playWithFileName(folderLoc,fileLoc[audioFile]); // Play the audio file  
     musicDone = 0; // Mark as 0 because the music is playing
     prevMillis = currMillis; // Mark prevMillis as the time the audio played
   }
@@ -39,20 +71,19 @@ void playMusic(unsigned int time, int8_t folderName, int8_t fileName)
   }
 }
 
-// Read the light intensity of environment to turn on/ off LED
-void readLight(int rightLED, int leftLED, uint8_t PHOTORES) {
+void Audio::readLight() {
   // Read the environment's light intensity
-  int photocellStatus = analogRead(PHOTORES);
+  int photocellStatus = analogRead(photores);
 
   // Turn on the light when the value of photoresistor is greater than 500
-  if (photocellStatus > 500) 
+  if (photocellStatus > lightThreshold) 
   {
     // Turning on 2 headlights
     digitalWrite(rightLED, HIGH);
     digitalWrite(leftLED, HIGH);
 
     // Play "Ka - Chow"
-    playMusic(2, folderName, fileName);
+    playMusic(2, 0);
 
     // Serial print the photoresistor's value
     Serial.print("Its DARK, Turn on the LED : ");

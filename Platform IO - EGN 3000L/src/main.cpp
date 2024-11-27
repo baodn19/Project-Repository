@@ -7,13 +7,11 @@
 // Variables
 //Motor
 int motorConfig[6] = {6, 5, 3, 9, 10, 11};
-#define IR_SENSOR_RIGHT 12 // Pin for right IR sensor
-#define IR_SENSOR_LEFT 13 // Pin for left IR sensor
+#define IR_SENSOR_RIGHT A2 // Pin for right IR sensor
+#define IR_SENSOR_LEFT A1 // Pin for left IR sensor
 #define MOTOR_SPEED 130 // Motors' speed
 
 Motor yellowMotor(motorConfig, IR_SENSOR_RIGHT, IR_SENSOR_LEFT);
-
-// IR Sensors
 
 // Headlights and Photoresistor
 #define RIGHT_LED 2 // Pin for right headlight
@@ -24,32 +22,18 @@ Motor yellowMotor(motorConfig, IR_SENSOR_RIGHT, IR_SENSOR_LEFT);
 int8_t volume = 0x1a; // set the volume for the speaker
 #define MP3_RX 7//RX of Serial MP3 module connect to D7 of Arduino
 #define MP3_TX 8//TX to D8, note that D8 can not be used as RX on Mega2560, you should modify this if you donot use Arduino UNO
-MP3 mp3(MP3_RX, MP3_TX);
+int8_t fileLoc[2] = {0x01, 0x02};
+Audio speaker(MP3_RX, MP3_TX, 0x01, fileLoc, 0x1a, RIGHT_LED, LEFT_LED, PHOTORES);
+
 
 
 
 void setup() {
-  //The problem with TT gear motors is that, at very low pwm value it does not even rotate.
-  //If we increase the PWM value then it rotates faster and our robot is not controlled in that speed and goes out of line.
-  //For that we need to increase the frequency of analogWrite.
-  //Below line is important to change the frequency of PWM signal on pin D5 and D6
-  //Because of this, motor runs in controlled manner (lower speed) at high PWM value.
-  //This sets frequecny as 7812.5 hz
-  TCCR0B = TCCR0B & (B11111000 | B00000010);
+  speaker.setAudio();
 
   // put your setup code here, to run once:
   yellowMotor.setMotor();
-  yellowMotor.rotateMotor();
-
-  // Set output for headlights and input for the photoresistor
-  pinMode(RIGHT_LED, OUTPUT);
-  pinMode(LEFT_LED, OUTPUT);
-  pinMode(PHOTORES, INPUT);
-
-  // Initialize the MP3 module
-  delay(500);//Requires 500ms to wait for the MP3 module to initialize  
-  mp3.setVolume(volume);
-  delay(50);//you should wait for >=50ms between two commands
+  yellowMotor.rotateMotor(); // Make sure the motor stop
 
   Serial.begin (9600) ; // use default of 9600 baud rate for serial communication
 }
@@ -57,6 +41,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   yellowMotor.rotateMotor(MOTOR_SPEED);
-  readLight(RIGHT_LED, LEFT_LED, PHOTORES);
+  speaker.readLight();
   delay(500);
 }

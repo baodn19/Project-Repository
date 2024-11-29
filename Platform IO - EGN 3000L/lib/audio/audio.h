@@ -18,37 +18,62 @@ private:
     int leftLED;
     uint8_t photores;
     int lightThreshold;
+    int isStop; // store the state of the robot (moving or stop)
 
 public: 
+    /*
+    Description: assign values to the object
+    Input: 
+        RX_: pin for RX
+        TX_: pin for TX
+        folderLoc_: location of the folder in hexadecimal
+        fileLoc_: an array for file location in the folder in hexadecimal
+        volume_: volume of speaker in hexadecimal
+        rightLED_: pin of the right LED
+        leftLED_: pin of the left LED
+        photores_: pin of photoresistor
+    */
     Audio(int RX_, int TX_, int8_t folderLoc_, int8_t (&fileLoc_)[2], int8_t volume_, int rightLED_, int leftLED_, uint8_t photores_);
 
+    /*
+    Description: setup all the audio pin in void setup() in main.cpp
+    */
     void setAudio();
 
+    /*
+    Description: change the boundary for light to turn on and off
+    Input - lightThreshold_: the value of the boundary
+    */
     void changeLightThreshold(int lightThreshold_);
 
+    /*
+    Description: play the audio file and wait for the audio to finish
+    Input:
+        time: the actual duration * 5
+        audioFile: the index of the audio file in the fileLoc array
+    */
     void playMusic(unsigned int time, int audioFile);
+    
+    /*
+    Description: turn the light on and off based on the photoresistor value
+    */
+    void controlLight();
 
-    void readLight();
+    /*
+    Description: decide if the room is dark or bright
+    Output:
+        1: the room is dark, light is turned on
+        0: the room is bright, light is turned off
+    */
+    int isDark();
+
+    /*
+    Description: assign the value of the robot status
+    Input: the status of the robot
+        1: stopped
+        0: moving
+    */
+    void getRobotStatus(int status);
 };
 
-
-
-
-/* playMusic()
-Description: play the audio file based on location and make sure the audio file is played completely before
-Arguments: 
-    time: the duration of audio file (seconds)
-    foldername: location of folders in bits
-    filename: location of file in bits
-*/
-void playMusic(unsigned int time, int8_t folderName, int8_t fileName);
-
-/*
-Description: turn on or off the headlights based on the photoresistor's readings
-Arguments:
-    rightLED, leftLED: pins for headlights
-    PHOTORES: pin for photoresistor
-*/
-void readLight(int rightLED, int leftLED, uint8_t PHOTORES);
-
-#endif 
+#endif

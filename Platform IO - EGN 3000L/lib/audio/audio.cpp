@@ -2,18 +2,6 @@
 #include <SoftwareSerial.h> // Needed for the playing audio
 #include <RedMP3.h> // store all the function of the audio controller
 
-// Variable
-int musicDone = 1; // check if the music is done playing
-unsigned long prevMillis = 0; // timestamp when the music is played
-unsigned long currMillis = 0; // current timestamp
-
-// MP3 Module
-#define MP3_RX 7//RX of Serial MP3 module connect to D7 of Arduino
-#define MP3_TX 8//TX to D8, note that D8 can not be used as RX on Mega2560, you should modify this if you donot use Arduino UNO
-
-int8_t folderName = 0x01; // Set location of sound foler
-int8_t fileName = 0x01; // Set file wanted to play
-
 Audio::Audio(int RX_, int TX_, int8_t folderLoc_, int8_t (&fileLoc_)[2], int8_t volume_, int rightLED_, int leftLED_, uint8_t photores_) {
   // Array attribute
   for (int i = 0; i < 2; i++) {
@@ -28,6 +16,10 @@ Audio::Audio(int RX_, int TX_, int8_t folderLoc_, int8_t (&fileLoc_)[2], int8_t 
   rightLED = rightLED_;
   leftLED = leftLED_;
   photores = photores_;
+
+  // musicDone = 1;
+  // prevMillis = 0;
+  // currMillis = 0;
 }
 
 void Audio::setAudio() {
@@ -53,9 +45,14 @@ void Audio::playMusic(unsigned int time, int audioFile) {
 
   // Marking the current timestamp
   currMillis = millis();
+  // Serial.print("MusicDone: ");
+  // Serial.println(musicDone);
 
   // Check if the audio is finished playing
   if (musicDone == 1) {
+    // Serial.print("Current Mill: ");
+    // Serial.println(currMillis);
+    // Serial.println("Prev Mill: " + String(prevMillis));
     mp3.playWithFileName(folderLoc,fileLoc[audioFile]); // Play the audio file  
     musicDone = 0; // Mark as 0 because the music is playing
     prevMillis = currMillis; // Mark prevMillis as the time the audio played
@@ -71,31 +68,46 @@ void Audio::playMusic(unsigned int time, int audioFile) {
   }
 }
 
-void Audio::readLight() {
-  // Read the environment's light intensity
-  int photocellStatus = analogRead(photores);
+void Audio::controlLight() {
 
   // Turn on the light when the value of photoresistor is greater than 500
-  if (photocellStatus > lightThreshold) 
+  if (this->isDark() == 1) 
   {
     // Turning on 2 headlights
     digitalWrite(rightLED, HIGH);
     digitalWrite(leftLED, HIGH);
 
-    // Play "Ka - Chow"
-    playMusic(2, 0);
-
-    // Serial print the photoresistor's value
-    Serial.print("Its DARK, Turn on the LED : ");
-    Serial.println(photocellStatus);
+    if (isStop == 1) { // 1 means the robot stopped
+      // Play "Ka - Chow" as 10 seconds
+      this->playMusic(10, 0);
+    }
+    
   } else 
   {
     // Turn off the 2 headlights
     digitalWrite(rightLED, LOW);
     digitalWrite(leftLED, LOW);
-
-    // Serial print the photoresistor's value
-    Serial.print("Its BRIGHT, Turn off the LED : ");
-    Serial.println(photocellStatus);
   }
+}
+
+int Audio::isDark() {
+  // Read the environment's light intensity
+  int photocellStatus = analogRead(photores);
+
+  if (photocellStatus > lightThreshold) {
+    // Serial print the photoresistor's value
+    // Serial.print("Its DARK, Turn on the LED : ");
+    // Serial.println(photocellStatus);
+
+    return 1; // 1 means the room is dark
+  } else {
+    // Serial.print("Its BRIGHT, Turn off the LED : ");
+    // Serial.println(photocellStatus);
+
+    return 0; // 0 means the room is bright
+  }
+}
+
+void Audio::getRobotStatus(int status) {
+  isStop = status;
 }

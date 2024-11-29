@@ -19,17 +19,15 @@ Motor yellowMotor(motorConfig, IR_SENSOR_RIGHT, IR_SENSOR_LEFT);
 #define PHOTORES A0 // Pin for photoresistor
 
 // MP3 Module
-int8_t volume = 0x1a; // set the volume for the speaker
+int8_t volume = 0x19; // set the volume for the speaker
 #define MP3_RX 7//RX of Serial MP3 module connect to D7 of Arduino
 #define MP3_TX 8//TX to D8, note that D8 can not be used as RX on Mega2560, you should modify this if you donot use Arduino UNO
 int8_t fileLoc[2] = {0x01, 0x02};
-Audio speaker(MP3_RX, MP3_TX, 0x01, fileLoc, 0x1a, RIGHT_LED, LEFT_LED, PHOTORES);
-
-
-
+Audio speaker(MP3_RX, MP3_TX, 0x01, fileLoc, volume, RIGHT_LED, LEFT_LED, PHOTORES);
 
 void setup() {
   speaker.setAudio();
+  speaker.changeLightThreshold(500); // Set the light threshold for turning on and off the headlights
 
   // put your setup code here, to run once:
   yellowMotor.setMotor();
@@ -40,7 +38,14 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  yellowMotor.rotateMotor(MOTOR_SPEED);
-  speaker.readLight();
+  int envLight = speaker.isDark(); // Get the light intensity of the environment
+  Serial.println("Dark: " + String(envLight));
+  yellowMotor.getLight(envLight); // Assign the light intensity of the environment
+  yellowMotor.rotateMotor(MOTOR_SPEED, 5);
+
+  int robotState = yellowMotor.isStop(); // get the state of the robot (moving or not)
+  speaker.getRobotStatus(robotState); // assign the state of the robot
+  speaker.controlLight();
   delay(500);
 }
+

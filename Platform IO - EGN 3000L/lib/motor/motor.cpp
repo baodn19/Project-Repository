@@ -1,4 +1,5 @@
 #include "motor.h"
+#include <audio.h>
 
 // Create a class for motor function
 Motor::Motor(int (&motorPin_)[6], uint8_t rightIR_, uint8_t leftIR_) {
@@ -50,14 +51,16 @@ void Motor::rotateMotor(int endSpeed, int speedChange) {
     digitalWrite(motorPin[4],LOW);
   }
 
-  // Input speed into each motor
-  analogWrite(motorPin[2], endSpeed);
-  analogWrite(motorPin[5], endSpeed);
+  if (isDark == 1) {
+    this->speedControl(50, speedChange);
+  } else {
+    this->speedControl(endSpeed, speedChange);
+  }
 
   // Checking the value of each IR sensors
-  Serial.println("Right: " + String(rightIRSensorValue));
-  Serial.println("Left: " + String(leftIRSensorValue));
-  Serial.println();
+  // Serial.println("Right: " + String(rightIRSensorValue));
+  // Serial.println("Left: " + String(leftIRSensorValue));
+  // Serial.println();
 }
 
 void Motor::setMotor() {
@@ -68,7 +71,6 @@ void Motor::setMotor() {
   //Because of this, motor runs in controlled manner (lower speed) at high PWM value.
   //This sets frequecny as 7812.5 hz
   TCCR0B = TCCR0B & (B11111000 | B00000010);
-
   
   for (int i = 0; i < 6; i++) {
     pinMode(motorPin[i], OUTPUT);
@@ -77,13 +79,49 @@ void Motor::setMotor() {
     // Set input for ir sensors
     pinMode(rightIR, INPUT);
     pinMode(leftIR, INPUT);
+    this->setCurrentSpeed(0); // Set current speed to 0
+    this->setStopSpeed(10);
 }
 
 void Motor::setCurrentSpeed(int currentSpeed_) {
   currentSpeed = currentSpeed_;
 }
 
+void Motor::setStopSpeed(int stopSpeed_) { 
+  stopSpeed = stopSpeed_; 
+}
 
-/*
+void Motor::speedControl(int endSpeed, int speedChange) {
+  // Acceleration
+  if (currentSpeed < endSpeed) {
+    currentSpeed += speedChange;
+    // Input speed into each motor
+    analogWrite(motorPin[2], currentSpeed);
+    analogWrite(motorPin[5], currentSpeed);
+  }
 
-*/
+  // Decceleration
+  if (currentSpeed > endSpeed) {
+    currentSpeed -= speedChange;
+    // Input speed into each motor
+    analogWrite(motorPin[2], currentSpeed);
+    analogWrite(motorPin[5], currentSpeed);
+  }
+  
+  Serial.println("Dark: " + String(isDark));
+  Serial.println("Current speed: " + String(currentSpeed));
+  Serial.println("");
+}
+
+// Decide whether the robot stopped or is still moving
+int Motor::isStop() {
+  if (currentSpeed == 50) {
+    return 1; // robot stop
+  } else {
+    return 0; // robot still going
+  }
+}
+
+void Motor::getLight(int isDark_) {
+  isDark = isDark_;
+}

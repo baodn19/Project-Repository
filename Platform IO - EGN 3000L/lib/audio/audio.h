@@ -19,6 +19,8 @@ private:
     uint8_t photores;
     int lightThreshold;
     int isStop; // store the state of the robot (moving or stop)
+    int prevState = -1; // store previous state of the robot to determine change of state
+    int changeState; // value if the robot just change isStop value
 
 public: 
     /*
@@ -57,7 +59,7 @@ public:
     /*
     Description: turn the light on and off based on the photoresistor value
     */
-    void controlLight();
+    void controlLight(int isStop_, int speedState);
 
     /*
     Description: decide if the room is dark or bright
@@ -69,11 +71,16 @@ public:
 
     /*
     Description: assign the value of the robot status
-    Input: the status of the robot
-        1: stopped
-        0: moving
+    Input: 
+        doGo: tell if the robot is moving or static
+            1: stopped
+            0: moving
+        speedState: tell the state in change of speed
+            -1: Decelerating
+            0: moving constantly
+            1: Accelerating
     */
-    void getRobotStatus(int status);
+    void getRobotStatus(int doGo, int speedState);
 };
 
 #endif

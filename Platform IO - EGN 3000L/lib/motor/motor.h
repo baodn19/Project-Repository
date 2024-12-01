@@ -7,11 +7,13 @@ class Motor {
 private:
     // Attributes
     int motorPin[6];
-    uint8_t rightIR;
-    uint8_t leftIR;
+    int rightIR;
+    int leftIR;
     int currentSpeed; // store the current speed of both motor
     int stopSpeed; // store the speed to stop the motor
     int isDark; // determine if the room is dark or not
+    int doGo; // whether the robot detects a line and go or not
+    int stateChange; // tells  if robot is accelerating, decelerating, or moving constantly
 
 public:
     /*
@@ -21,7 +23,7 @@ public:
         rightIR_: pin of right IR sensor
         leftIR_: pin of left IR sensor
     */
-    Motor(int (&motorPin_)[6], uint8_t rightIR_, uint8_t leftIR_);
+    Motor(int (&motorPin_)[6], int rightIR_, int leftIR_);
 
     /*
     Description: set the mode for all the motors' pin in the void setup() in main.cpp
@@ -70,6 +72,15 @@ public:
     Input - stopSpeed: speed when the motor stop moving
     */
     void setStopSpeed(int stopSpeed_);
+
+    /*
+    Description: return the state of the robot
+    Output: 
+        -1: Decelerating
+        0: moving constantly
+        1: Accelerating
+    */
+    int speedState();
 };
 
 #endif

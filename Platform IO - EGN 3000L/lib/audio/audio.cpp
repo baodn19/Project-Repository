@@ -42,13 +42,14 @@ void Audio::changeLightThreshold(int lightThreshold_) {
 void Audio::playMusic(unsigned int time, int audioFile) {
   // Create mp3 object
   MP3 mp3(RX, TX);
-
+  
   // Marking the current timestamp
   currMillis = millis();
   // Serial.print("MusicDone: ");
   // Serial.println(musicDone);
+  
 
-  // Check if the audio is finished playing
+  // Check if the audio is finished playing or the robot change its state
   if (musicDone == 1) {
     // Serial.print("Current Mill: ");
     // Serial.println(currMillis);
@@ -68,7 +69,7 @@ void Audio::playMusic(unsigned int time, int audioFile) {
   }
 }
 
-void Audio::controlLight() {
+void Audio::controlLight(int isStop_, int speedState) {
 
   // Turn on the light when the value of photoresistor is greater than 500
   if (this->isDark() == 1) 
@@ -77,16 +78,20 @@ void Audio::controlLight() {
     digitalWrite(rightLED, HIGH);
     digitalWrite(leftLED, HIGH);
 
-    if (isStop == 1) { // 1 means the robot stopped
+    if (isStop_ == 1) { // 1 means the robot stopped
       // Play "Ka - Chow" as 10 seconds
       this->playMusic(10, 0);
     }
-    
   } else 
   {
     // Turn off the 2 headlights
     digitalWrite(rightLED, LOW);
     digitalWrite(leftLED, LOW);
+
+    if (speedState == 1) { 
+      //unsigned int time ;
+      this->playMusic(9999, 1);
+    }
   }
 }
 
@@ -98,16 +103,27 @@ int Audio::isDark() {
     // Serial print the photoresistor's value
     // Serial.print("Its DARK, Turn on the LED : ");
     // Serial.println(photocellStatus);
+    return  1; // 1 means the room is dark
 
-    return 1; // 1 means the room is dark
+    
   } else {
     // Serial.print("Its BRIGHT, Turn off the LED : ");
     // Serial.println(photocellStatus);
-
     return 0; // 0 means the room is bright
   }
 }
 
-void Audio::getRobotStatus(int status) {
-  isStop = status;
+void Audio::getRobotStatus(int isStop_, int speedState) {
+  isStop = isStop_;
+  if (speedState != prevState) {
+    changeState = 1; // robot change state
+  } else { 
+    changeState = 0; // robot didn't change state
+  }
+
+  prevState = speedState; // update prev state
+
+  Serial.println("Stop?: " + String(isStop));
+  Serial.println("State changed?: " + String(speedState));
+  Serial.println("");
 }

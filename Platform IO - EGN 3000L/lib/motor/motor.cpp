@@ -2,7 +2,7 @@
 #include <audio.h>
 
 // Create a class for motor function
-Motor::Motor(int (&motorPin_)[6], uint8_t rightIR_, uint8_t leftIR_) {
+Motor::Motor(int (&motorPin_)[6], int rightIR_, int leftIR_) {
   // Assign value to array
     for (int i = 0; i < 6; i++) {
       motorPin[i] = motorPin_[i];
@@ -25,6 +25,8 @@ void Motor::rotateMotor(int endSpeed, int speedChange) {
     digitalWrite(motorPin[1],LOW); 
     digitalWrite(motorPin[3],HIGH);
     digitalWrite(motorPin[4],LOW);
+    
+    doGo = 1; // robot detects a line and moves
   }
   //If right sensor detects black line, then turn right
   else if (rightIRSensorValue == HIGH && leftIRSensorValue == LOW )
@@ -33,6 +35,8 @@ void Motor::rotateMotor(int endSpeed, int speedChange) {
     digitalWrite(motorPin[1],HIGH); 
     digitalWrite(motorPin[3],HIGH);
     digitalWrite(motorPin[4],LOW); 
+
+    doGo = 1; // robot detects a line and moves
   }
   //If left sensor detects black line, then turn left  
   else if (rightIRSensorValue == LOW && leftIRSensorValue == HIGH )
@@ -41,6 +45,8 @@ void Motor::rotateMotor(int endSpeed, int speedChange) {
     digitalWrite(motorPin[1],LOW); 
     digitalWrite(motorPin[3],LOW);
     digitalWrite(motorPin[4],HIGH);
+
+    doGo = 1; // robot detects a line and moves
   } 
   //If both the sensors detect black line, then stop 
   else 
@@ -49,17 +55,25 @@ void Motor::rotateMotor(int endSpeed, int speedChange) {
     digitalWrite(motorPin[1],LOW);
     digitalWrite(motorPin[3],LOW);
     digitalWrite(motorPin[4],LOW);
+
+    doGo = 0; // robot detects no line/ black line and does not move
   }
 
   if (isDark == 1) {
-    this->speedControl(50, speedChange);
+    this->speedControl(stopSpeed, speedChange); // Deccelerate
+     stateChange = -1; 
+  } else if (doGo == 1 && currentSpeed != endSpeed) {
+    this->speedControl(endSpeed, speedChange); // Accelerate
+     stateChange = 1;
   } else {
-    this->speedControl(endSpeed, speedChange);
+    analogWrite(motorPin[2], endSpeed); // Run at constant speed
+    analogWrite(motorPin[5], endSpeed);
+     stateChange = 0;
   }
 
   // Checking the value of each IR sensors
-  // Serial.println("Right: " + String(rightIRSensorValue));
-  // Serial.println("Left: " + String(leftIRSensorValue));
+  // Serial.println("State: " + String(stateChange));
+  // Serial.println("Speed: " + String(currentSpeed));
   // Serial.println();
 }
 
@@ -80,7 +94,7 @@ void Motor::setMotor() {
     pinMode(rightIR, INPUT);
     pinMode(leftIR, INPUT);
     this->setCurrentSpeed(0); // Set current speed to 0
-    this->setStopSpeed(10);
+    this->setStopSpeed(0);
 }
 
 void Motor::setCurrentSpeed(int currentSpeed_) {
@@ -108,20 +122,31 @@ void Motor::speedControl(int endSpeed, int speedChange) {
     analogWrite(motorPin[5], currentSpeed);
   }
   
-  Serial.println("Dark: " + String(isDark));
-  Serial.println("Current speed: " + String(currentSpeed));
-  Serial.println("");
+  // Serial.println("Dark: " + String(isDark));
+  // Serial.println("Current speed: " + String(currentSpeed));
+  // Serial.println("");
 }
 
 // Decide whether the robot stopped or is still moving
 int Motor::isStop() {
-  if (currentSpeed == 50) {
-    return 1; // robot stop
+  int status;
+  if (currentSpeed == stopSpeed || doGo == 0) {
+    status =  1; // robot stop
   } else {
-    return 0; // robot still going
+    status = 0; // robot still going
   }
+
+  // Serial.println("Stop?: " + String(status));
+  // Serial.println("Speed: " + String(currentSpeed));
+  // Serial.println("");
+
+  return status;
 }
 
 void Motor::getLight(int isDark_) {
   isDark = isDark_;
+}
+
+int Motor::speedState() {
+  return stateChange;
 }

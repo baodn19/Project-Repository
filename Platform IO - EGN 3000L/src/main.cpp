@@ -19,7 +19,7 @@ Motor yellowMotor(motorConfig, IR_SENSOR_RIGHT, IR_SENSOR_LEFT);
 #define PHOTORES A0 // Pin for photoresistor
 
 // MP3 Module
-int8_t volume = 0x5; // set the volume for the speaker 0x19
+int8_t volume = 0x19; // set the volume for the speaker 0x19
 #define MP3_RX 7//RX of Serial MP3 module connect to D7 of Arduino
 #define MP3_TX 8//TX to D8, note that D8 can not be used as RX on Mega2560, you should modify this if you donot use Arduino UNO
 int8_t fileLoc[2] = {0x01, 0x02};

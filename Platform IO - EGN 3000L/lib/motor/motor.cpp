@@ -63,7 +63,8 @@ void Motor::rotateMotor(int endSpeed, int speedChange) {
     this->speedControl(stopSpeed, speedChange); // Deccelerate
      stateChange = -1; 
   } else if (doGo == 1 && currentSpeed != endSpeed) {
-    this->speedControl(endSpeed, speedChange); // Accelerate
+    analogWrite(motorPin[2], endSpeed); // Run at constant speed
+    analogWrite(motorPin[5], endSpeed);
      stateChange = 1;
   } else {
     analogWrite(motorPin[2], endSpeed); // Run at constant speed

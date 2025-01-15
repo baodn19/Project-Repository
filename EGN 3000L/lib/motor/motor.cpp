@@ -18,7 +18,7 @@ void Motor::rotateMotor(int endSpeed, int speedChange) {
   int rightIRSensorValue = digitalRead(rightIR);
   int leftIRSensorValue = digitalRead(leftIR);
 
-  //If none of the sensors detects black line, then go straight
+  // If none of the sensors detects black line, then go straight
   if (rightIRSensorValue == LOW && leftIRSensorValue == LOW)
   {
     digitalWrite(motorPin[0],HIGH);
@@ -66,16 +66,11 @@ void Motor::rotateMotor(int endSpeed, int speedChange) {
     analogWrite(motorPin[2], endSpeed); // Run at constant speed
     analogWrite(motorPin[5], endSpeed);
      stateChange = 1;
-  } else {
-    analogWrite(motorPin[2], endSpeed); // Run at constant speed
-    analogWrite(motorPin[5], endSpeed);
-     stateChange = 0;
-  }
-
-  // Checking the value of each IR sensors
-  // Serial.println("State: " + String(stateChange));
-  // Serial.println("Speed: " + String(currentSpeed));
-  // Serial.println();
+  } 
+  //Checking the value of each IR sensors
+  Serial.println("State: " + String(stateChange));
+  Serial.println("Speed: " + String(currentSpeed));
+  Serial.println();
 }
 
 void Motor::setMotor() {

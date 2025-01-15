@@ -90,7 +90,7 @@ void Audio::controlLight(int isStop_, int speedState) {
 
     if (speedState == 1) { 
       //unsigned int time ;
-      // this->playMusic(9999, 1);
+      this->playMusic(9999, 1);
     }
   }
 }

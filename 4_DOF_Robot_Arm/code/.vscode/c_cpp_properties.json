@@ -1,0 +1,64 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/include",
+                "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/src",
+                "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/.pio/libdeps/uno/LiquidCrystal_I2C",
+                "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/.pio/libdeps/uno/SimpleKalmanFilter/src",
+                "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/.pio/libdeps/uno/Servo/src",
+                "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/cores/arduino",
+                "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/variants/standard",
+                "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/lib/AccelStepper",
+                "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/include",
+                    "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/src",
+                    "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/.pio/libdeps/uno/LiquidCrystal_I2C",
+                    "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                    "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/.pio/libdeps/uno/SimpleKalmanFilter/src",
+                    "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/.pio/libdeps/uno/Servo/src",
+                    "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/cores/arduino",
+                    "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/variants/standard",
+                    "D:/Git/Project-Repository/4_DOF_Robot_Arm/code/lib/AccelStepper",
+                    "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                    "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "C:/Users/Bill Jabroski/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=60116",
+                "ARDUINO_AVR_UNO",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10808",
+                "__AVR_ATmega328P__",
+                ""
+            ],
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++11",
+            "compilerPath": "C:/Users/Bill Jabroski/.platformio/packages/toolchain-atmelavr/bin/avr-gcc.exe",
+            "compilerArgs": [
+                "-mmcu=atmega328p",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}

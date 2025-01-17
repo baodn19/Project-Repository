@@ -1,0 +1,99 @@
+#define X_STEP_PIN    54
+#define X_DIR_PIN     55
+#define X_ENABLE_PIN  38
+AccelStepper stepX (1, X_STEP_PIN, X_DIR_PIN, X_ENABLE_PIN); // X axis
+
+#define Y_STEP_PIN    60
+#define Y_DIR_PIN     61
+#define Y_ENABLE_PIN  56
+AccelStepper stepY (1, Y_STEP_PIN, Y_DIR_PIN, Y_ENABLE_PIN); // Y axis
+
+#define Z_STEP_PIN    46
+#define Z_DIR_PIN     48
+#define Z_ENABLE_PIN  62
+AccelStepper stepZ (1, Z_STEP_PIN, Z_DIR_PIN, Z_ENABLE_PIN); // Z axis
+
+
+// END_STOP
+#define END_X 3
+#define END_Y 14
+#define END_Z 18
+
+// Variable resistor 
+#define RES_X A3
+#define RES_Y A4
+#define RES_Z A5
+#define BUTTON A10
+#define DOWN_B 16
+#define UP_B   17
+#define ENTER_B 23
+
+SERVO: D4
+  0   -> CLOSE 
+  180 -> OPEN
+
+ROTATION:
+  X: + -> END_STOP 
+  Y: + -> END_STOP
+  Z: - -> END_STOP
+
+PHAM VI HOAT DONG:
+    X: 0 -> -500
+    Y: 0 -> -300
+    Z: 0 -> 250
+
+TINH TI LENH TRUYEN:
+   Banh rang ROBOT: 90
+   Banh rang Puly: 20
+   -> ti le truyen 4.5/1 ; puly quay 4.5 vong = robot 1 vong
+
+VI TRI DEMO:
+    1:  X: -235
+        Y: -171
+        Z: 142
+        KEP: Mo
+        
+    2:  X: -348
+        Y: -171
+        Z: 142
+        KEP: Mo  
+
+    3:  X: -348
+        Y: -294
+        Z: 228
+        KEP: Kep 
+
+    4:  X: -348
+        Y: -153
+        Z: 112
+        KEP: Kep   
+
+    5:  X: -450
+        Y: -153
+        Z: 112
+        KEP: Kep 
+
+    6:  X: -450
+        Y: -300
+        Z: 216
+        KEP: Mo
+    
+    7:  X: -216
+        Y: -147
+        Z: 101
+        KEP: Mo
+
+    8:  X: -56
+        Y: -289
+        Z: 229
+        KEP: Kep
+
+    9:  X: -259
+        Y: -164
+        Z: 122
+        KEP: Kep
+
+    10:  X: -259
+        Y: -295
+        Z: 234
+        KEP: Mo

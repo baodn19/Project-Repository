@@ -1,8 +1,8 @@
 // Library
-#include <motor.h>
-#include <audio.h>
-#include <SoftwareSerial.h> // Needed for the playing audio
-#include <RedMP3.h> // store all the function of the audio controller
+// #include <motor.h>
+// #include <audio.h>
+// #include <SoftwareSerial.h> // Needed for the playing audio
+// #include <RedMP3.h> // store all the function of the audio controller
 
 // Variables
 //Motor
